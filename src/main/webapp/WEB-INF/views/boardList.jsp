@@ -1,5 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page session="true" %>
+<%@ page session="false" %>
 <c:set var="loginOutLink" value="${sessionScope.id==null? '/login/login':'login/logout'}"/>
 <c:set var="loginOut" value="${sessionScope.id==null? 'login':'logout'}"/>
 <html>
@@ -43,9 +43,11 @@
 	</div>
 </nav>
 <main style="text-align: center">
-	<h1>This is Home</h1>
-	<h1>This is Home</h1>
-	<h1>This is Home</h1>
+	<h1>This is Board</h1>
+	<h1>This is Board</h1>
+	<h1>This is Board</h1>
+	<h1>This is Board</h1>
+	<h1>This is Board</h1>
 </main>
 </body>
 </html>
