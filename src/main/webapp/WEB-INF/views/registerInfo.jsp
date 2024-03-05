@@ -5,6 +5,10 @@
     <meta charset="UTF-8">
     <title>Insert title here</title>
 <body>
+<script>
+    let msg = "${msg}"
+    if(msg != '') alert(msg);
+</script>
     <h1>id=${user.id}</h1>
     <h1>pwd=${user.pwd}</h1>
     <h1>name=${user.name}</h1>

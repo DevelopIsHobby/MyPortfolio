@@ -1,5 +1,8 @@
 package com.myportfolio.web.controller;
 
+import com.myportfolio.web.dao.UserDao;
+import com.myportfolio.web.domain.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +19,9 @@ import java.net.URLEncoder;
 @Controller
 @RequestMapping("/login")
 public class LoginController {
+    @Autowired
+    UserDao userDao;
+
     @GetMapping("/login")
     public String loginForm() {
         return "loginForm";
@@ -56,7 +62,11 @@ public class LoginController {
         return "redirect:"+toURL;
     }
 
-    private boolean loginCheck(String id, String pwd) {
-        return id.equals("asdf") && String.valueOf(pwd).equals("1234");
+    private boolean loginCheck(String id, String pwd) throws Exception{
+        User user = userDao.selectUser(id); // 일치하는 id가 있는지 확인
+
+        if(id == null) return false;
+
+        return user.getPwd().equals(pwd); // 일치하는 id가 있을 경우 비밀번호 비교
     }
 }

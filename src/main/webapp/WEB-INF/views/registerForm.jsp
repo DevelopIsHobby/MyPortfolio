@@ -19,6 +19,10 @@
     </style>
 </head>
 <body>
+<script>
+    let msg = "${msg}"
+    if(msg != '') alert(msg);
+</script>
 <div id="container">
     <div class="card" style="width: 30rem; margin :0 auto;">
         <div class="card-header text-center">
@@ -27,9 +31,7 @@
         <div class="card-body">
             <div id="msg" class="msg"></div>
             <form:form class="form" modelAttribute="user" >
-                <div class="card-body">
-                    <form:errors path="id" cssClass="msg alert alert-danger" />
-                </div>
+                <div class="card-body"><form:errors path="id" cssClass="msg alert alert-danger" /></div>
                 <div class="mb-3">
                     <label for="InputId" class="form-label">ID</label>
                     <input type="text" name="id" class="form-control" id="InputId" placeholder="8~12자리의 영대소문자와 숫자 조합">
@@ -79,10 +81,13 @@
         let formId = document.querySelector("#InputId");
         let formPwd = document.querySelector("#InputPassword");
 
-
         if(formPwd.value.length <3) {
             e.preventDefault()
             setMessage("pwd의 길이는 3이상이어야 합니다.", formPwd);
+        }
+        if(formId.value.length === 0) {
+            e.preventDefault()
+            setMessage("id를 입력해주세요.", formId);
         }
     })
 
