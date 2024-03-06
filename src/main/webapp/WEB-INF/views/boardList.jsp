@@ -1,4 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt_rt" %>
 <%@ page session="true" %>
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="UTF-8" %>
 <c:set var="loginOutLink" value="${sessionScope.id==null? '/login/login':'login/logout'}"/>
@@ -15,6 +16,8 @@
 	let msg = "${msg}"
 	if(msg === "Del_ok") alert("삭제에 성공했습니다.");
 	if(msg === "Mod_ok") alert("수정에 성공했습니다.");
+
+	if(msg === "read_error") alert("삭제되었거나 없는 게시물입니다.");
 </script>
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
 	<div class="container-fluid">
@@ -41,10 +44,6 @@
 					</a>
 				</li>
 			</ul>
-			<form class="d-flex" role="search">
-				<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-				<button class="btn btn-outline-success" type="submit">Search</button>
-			</form>
 		</div>
 	</div>
 </nav>
@@ -52,6 +51,17 @@
 		<div class="container-sm w-50" style="padding-top: 50px;">
 			<table class="table">
 				<p class="fs-1 text-center">게시판 목록</p>
+				<div class="search-container" style="float:right">
+					<form action="<c:url value='/board/list'/>" class="d-flex" role="search" method="get">
+						<select class="form-select-sm" name="option" aria-label="Default select" >
+							<option value="A" <c:if test="${ph.sc.option=='A' || ph.sc.option ==''}">selected</c:if>>제목+내용</option>
+							<option value="T" <c:if test="${ph.sc.option=='T'}">selected</c:if>>제목</option>
+							<option value="W" <c:if test="${ph.sc.option=='W'}">selected</c:if>>작성자</option>
+						</select>
+						<input class="form-control-sm" type="search" name="keyword" value="${ph.sc.keyword}" placeholder="검색어를 입력해주세요." aria-label="Search">
+						<button class="btn-sm btn-outline-dark" type="submit" value="검색">검색</button>
+					</form>
+				</div>
 				<thead>
 				<tr class="table-warning">
 					<th scope="col">번호</th>
@@ -65,35 +75,47 @@
 				<c:forEach var="boardDto" items="${list}">
 				<tr>
 					<th scope="row">${boardDto.bno}</th>
-					<td><a href="<c:url value='/board/read?bno=${boardDto.bno}&page=${page}&pageSize=${pageSize}'/>" class="link-warning link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">${boardDto.title}</a></td>
+					<td><a href="<c:url value='/board/read${ph.sc.queryString}&bno=${boardDto.bno}'/>" class="link-warning link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">${boardDto.title}</a></td>
 					<td>${boardDto.writer}</td>
-					<td>${boardDto.reg_date}</td>
+					<c:choose>
+						<c:when test="${boardDto.reg_date.time >= startOfToday}">
+							<td class="regdate"><fmt:formatDate value="${boardDto.reg_date}" pattern="HH:mm" type="time"/></td>
+						</c:when>
+						<c:otherwise>
+							<td class="regdate"><fmt:formatDate value="${boardDto.reg_date}" pattern="yyyy-MM-dd" type="date"/></td>
+						</c:otherwise>
+					</c:choose>
 					<td>${boardDto.view_cnt}</td>
 				</tr>
 				</c:forEach>
 				</tbody>
 			</table>
-			<button id="writeBtn" style="float:right" class="btn btn-secondary btn-sm" type="button">글쓰기</button>
+			<button id="writeBtn" style="float:right;" class="btn btn-secondary btn-sm" type="button">글쓰기</button>
 			<nav aria-label="Page navigation" style="padding-top : 20px;">
 				<ul class="pagination justify-content-center">
-					<c:if test="${ph.showPrev}">
-						<li class="page-item">
-							<a class="page-link text-warning" href="<c:url value='/board/list?page=${ph.beginPage-1}'/>" aria-label="Previous">
-								<span aria-hidden="true">&laquo;</span>
-							</a>
-						</li>
+					<c:if test="${totalCnt==null || totalCnt==0}">
+						<div> 게시물이 없습니다. </div>
 					</c:if>
+					<c:if test="${totalCnt!=null && totalcCnt!=0}">
+						<c:if test="${ph.showPrev}">
+							<li class="page-item">
+								<a class="page-link text-warning" href="<c:url value='/board/list${ph.sc.getQueryString(ph.beginPage-1)}'/>" aria-label="Previous">
+									<span aria-hidden="true">&laquo;</span>
+								</a>
+							</li>
+						</c:if>
 
-					<c:forEach var="i" begin="${ph.beginPage}" end="${ph.endPage}">
-						<li class="page-item"><a class="page-link text-warning" href="<c:url value='/board/list?page=${i}'/>">${i}</a></li>
-					</c:forEach>
+						<c:forEach var="i" begin="${ph.beginPage}" end="${ph.endPage}">
+							<li class="page-item"><a class="page-link text-warning" href="<c:url value='/board/list${ph.sc.getQueryString(i)}'/>">${i}</a></li>
+						</c:forEach>
 
-					<c:if test="${ph.showNext}">
-						<li class="page-item">
-							<a class="page-link text-warning" href="<c:url value='/board/list?page=${ph.endPage+1}'/>" aria-label="Next">
-								<span aria-hidden="true">&raquo;</span>
-							</a>
-						</li>
+						<c:if test="${ph.showNext}">
+							<li class="page-item">
+								<a class="page-link text-warning" href="<c:url value='/board/list${ph.sc.getQueryString(ph.endPage+1)}'/>" aria-label="Next">
+									<span aria-hidden="true">&raquo;</span>
+								</a>
+							</li>
+						</c:if>
 					</c:if>
 				</ul>
 			</nav>

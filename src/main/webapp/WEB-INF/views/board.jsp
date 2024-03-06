@@ -42,43 +42,44 @@
 						</a>
 					</li>
 				</ul>
-				<form class="d-flex" role="search">
-					<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-					<button class="btn btn-outline-success" type="submit">Search</button>
-				</form>
 			</div>
 		</div>
 	</nav>
 
-	<main class="container-sm w-50" style="padding-top: 30px;">
-		<p id="head" class="fs-1 text-center">게시판 ${mode=="new"? "쓰기" : "읽기"}</p>
-		<form id="form">
-			<div class="mb-3">
-				<label for="FormControlInput0" class="form-label">Title</label>
-				<input type="hidden" class="form-control" name="bno" id="FormControlInput0" value="${boardDto.bno}">
-			</div>
-			<div class="mb-3">
-				<label for="FormControlInput1" class="form-label">Title</label>
-				<input type="text" class="form-control" name="title" id="FormControlInput1" value="${boardDto.title}" ${mode=="new"? '':'readonly'}>
-			</div>
+	<main class="container-sm w-50" style="padding-top: 30px; padding-bottom: 30px">
+		<div class="card">
+			<div class="card-body">
+				<p id="head" class="fs-1 text-center">게시판 ${mode=="new"? "쓰기" : "읽기"}</p>
+				<form id="form">
+					<div class="mb-3">
+						<label for="FormControlInput0" class="form-label"></label>
+						<input type="hidden" class="form-control" name="bno" id="FormControlInput0" value="${boardDto.bno}">
+					</div>
+					<div class="mb-3">
+						<label for="FormControlInput1" class="form-label">Title</label>
+						<input type="text" class="form-control" name="title" placeholder="제목을 입력해주세요." id="FormControlInput1" value="${boardDto.title}" ${mode=="new"? '':'readonly'}>
+					</div>
 
-			<div class="mb-3">
-				<label for="FormControlTextarea1" class="form-label">Content</label>
-				<textarea class="form-control form-text" name="content" id="FormControlTextarea1" rows="10" ${mode=="new"? '':'readonly'}>${boardDto.content}</textarea>
-			</div>
-			<div class="mb-3">
-				<label for="FormControlInput2" class="col-form-label">Writer</label>
-				<input type="text" class="form-control" name="writer" id="FormControlInput2" value="${writer}" readonly>
-			</div>
+					<div class="mb-3">
+						<label for="FormControlTextarea1" class="form-label">Content</label>
+						<textarea class="form-control form-text" placeholder="내용을 입력해주세요." name="content" id="FormControlTextarea1" rows="10" ${mode=="new"? '':'readonly'}>${boardDto.content}</textarea>
+					</div>
+					<div class="mb-3">
+						<label for="FormControlInput2" class="col-form-label">Writer</label>
+						<input type="text" class="form-control" name="writer" id="FormControlInput2" value="${writer}" readonly>
+					</div>
 
-			<div style="float:right">
-				<button id="writeBtn" class="btn btn-secondary btn-sm" type="button"  style="display: ${mode=="new"?'none':''}">글쓰기</button>
-				<button id="writeNewBtn" class="btn btn-secondary btn-sm" type="button" style="display:${mode=='new'? '':'none'};">등록</button>
-				<button id="modifyBtn" class="btn btn-secondary btn-sm" type="button">수정</button>
-				<button id="listBtn" class="btn btn-secondary btn-sm" type="button">목록</button>
-				<button id="deleteBtn" class="btn btn-secondary btn-sm" type="button">삭제</button>
+					<div style="float:right">
+						<button id="writeBtn" class="btn btn-secondary btn-sm" type="button"  style="display: ${mode=="new"?'none':''}">글쓰기</button>
+						<button id="writeNewBtn" class="btn btn-secondary btn-sm" type="button" style="display:${mode=='new'? '':'none'};">등록</button>
+						<button id="modifyBtn" class="btn btn-secondary btn-sm" type="button" style="display: ${mode=="new"?'none':''}">수정</button>
+						<button id="listBtn" class="btn btn-secondary btn-sm" type="button">목록</button>
+						<button id="backBtn" class="btn btn-secondary btn-sm" type="button" style="display: none">취소</button>
+						<button id="deleteBtn" class="btn btn-secondary btn-sm" type="button" style="display: ${mode=="new"?'none':''}">삭제</button>
+					</div>
+				</form>
 			</div>
-		</form>
+		</div>
 	</main>
 	<script>
 		let listBtn = document.querySelector("#listBtn");
@@ -86,17 +87,37 @@
 		let writeBtn = document.querySelector("#writeBtn");
 		let writeNewBtn = document.querySelector("#writeNewBtn");
 		let modifyBtn = document.querySelector("#modifyBtn");
+		let backBtn = document.querySelector("#backBtn");
+
+		let formCheck = function() {
+			let form = document.querySelector("#form");
+
+			if(form.title.value=="") {
+				alert("제목을 입력해주세요.")
+				form.title.focus();
+				return false;
+			}
+
+			if(form.content.value=="") {
+				alert("내용을 입력해주세요.")
+				form.content.focus();
+				return false;
+			}
+			return true;
+		}
 
 		listBtn.addEventListener("click", function() {
-			window.location.href="<c:url value='/board/list?page=${page}&pageSize=${pageSize}'/>";
+			window.location.href="<c:url value='/board/list${sc.queryString}'/>";
 		})
 
 		deleteBtn.addEventListener("click", function() {
 			let form = document.querySelector("#form");
 			if(!confirm("정말로 삭제하시겠습니까?")) return;
 
-			form.action = "<c:url value='/board/remove?page=${page}&pageSize=${pageSize}'/>";
+			form.action = "<c:url value='/board/remove${sc.queryString}'/>";
 			form.method="post"
+
+
 			form.submit();
 
 		})
@@ -111,7 +132,10 @@
 			form.action = "<c:url value='/board/write'/>";
 			form.method= "post";
 
-			form.submit();
+
+			if(formCheck()) {
+				form.submit();
+			}
 		})
 
 		modifyBtn.addEventListener("click", function() {
@@ -127,12 +151,21 @@
 				document.querySelector("#head").innerText = "게시판 수정"
 				document.querySelector("#writeBtn").style.display = "none";
 				document.querySelector("#deleteBtn").style.display = "none";
+				backBtn.style.display = "";
 				return;
 			}
-			form.action = "<c:url value='/board/modify?page=${page}&pageSize=${pageSize}'/>";
+
+			form.action = "<c:url value='/board/modify${sc.queryString}'/>";
 			form.method = "post";
 
-			form.submit();
+			if(formCheck()) {
+				form.submit();
+			}
+		})
+		backBtn.addEventListener("click", function() {
+			if(!confirm("수정한 내용이 삭제됩니다. 정말로 취소하시겠습니까?")) return;
+			alert("게시글 수정이 취소되었습니다.");
+			window.location.href= "<c:url value='/board/read${sc.queryString}&bno=${boardDto.bno}'/>"
 		})
 	</script>
 </body>
