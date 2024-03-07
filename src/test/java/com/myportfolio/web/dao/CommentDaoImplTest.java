@@ -18,6 +18,14 @@ public class CommentDaoImplTest {
     CommentDao commentDao;
 
     @Test
+    public void test() throws Exception{
+        commentDao.deleteAll(1041);
+        for(int i=1; i<=10; i++) {
+            CommentDto dto = new CommentDto(1041, null, "no content"+i,"asdf1");
+            commentDao.insert(dto);
+        }
+    }
+    @Test
     public void count() throws Exception {
         commentDao.deleteAll(1);
         assertTrue(commentDao.count(1)==0);

@@ -26,10 +26,10 @@
     </insert>
 
     <select id="selectAll" parameterType="int" resultType="CommentDto">
-        select cno, bno, pcno, comment, commenter, reg_date, up_date
+        select cno, bno, ifnull(pcno,cno) as pcno, comment, commenter, reg_date, up_date
         from comment
         where bno = #{bno}
-        order by reg_date, cno asc
+        order by pcno asc, cno asc
     </select>
 
     <select id="select" parameterType="int" resultType="CommentDto">
