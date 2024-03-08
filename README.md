@@ -45,7 +45,7 @@
         <li>게시글의 제목을 클릭함으로써 게시글에 접근할 수 있다.</li>
       </ul>
       <h3><li>게시글 화면</li></h3>
-      <img src="https://github.com/DevelopIsHobby/MyPortfolio/assets/107912101/94905212-79a1-4976-8f6e-715c72c743e8">
+      <img src="https://github.com/DevelopIsHobby/MyPortfolio/assets/107912101/c10dcf7b-4362-4a0f-bed8-873eb63e0f0f">
       <h4>게시글의 기본적인 기능</h4>
         <ul>
           <li>현재 화면에서는 게시글을 읽기만 할 수 있다.</li>
