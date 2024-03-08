@@ -33,7 +33,10 @@
       <ul><li>[submit]버튼을 클릭하면 유효성 검사를 진행한다.</li></ul>      
       <h3><li>로그인 화면</li></h3>
       <img src="https://github.com/DevelopIsHobby/MyPortfolio/assets/107912101/ef1647b1-b35a-452d-9ec6-550dd9c024e2">
-      <ul><li>[submit]버튼을 클릭하면 유효성 검사를 진행한다. 쿠키를 통해 아이디 기억기능을 구현하였다.</li></ul>
+      <ul>
+        <li>[submit]버튼을 클릭하면 유효성 검사를 진행한다.</li>
+        <li>쿠키를 통해 아이디 기억기능을 구현하였다.</li>
+      </ul> 
       <h3><li>게시판 목록 화면</li></h3>
       <img src="https://github.com/DevelopIsHobby/MyPortfolio/assets/107912101/d403617b-b5bf-46fa-86f6-7a9c411c7c88">
       <ul>
