@@ -10,7 +10,7 @@
     <div style="font-weight: 700; font-size: 15px; text-align: center; color: #282d33;">
     회원가입<br>
     로그인<br>
-    게시CRUD<br>
+    게시판CRUD<br>
     검색과 페이징<br>
     댓글과 덧글<br>
    </div> 
